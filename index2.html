@@ -32,7 +32,9 @@
 </head>
 
 <body>
-	
+<!-- Kosár popup -->
+<div id="succes-cart">A termék kosárba rakva.</div>
+
 <section class="hero1">
 	<div>
 		<div class="header">
@@ -238,7 +240,7 @@
 				</div>
 				<div class="ar-cta">
 					<div class="termek-ar">7 090 Ft<br><span>2 363 Ft/doboz</span><br><span>7 878 Ft/kg</span></div>
-					<button class="kosar-gomb" onclick="addToCart(223, '3 db-os Yourméé csomag', 7090, 'termek3.png', 1500, [csomag1_1, csomag1_2, csomag1_3])">Kosárba</button>
+					<button class="kosar-gomb" onclick="addToCart(223, '3 db-os Yourméé csomag', 7090, 'termek3.png', 1500, [document.getElementById('csomag1_1').value, document.getElementById('csomag1_2').value, document.getElementById('csomag1_3').value])">Kosárba</button>
 				</div>
 			</div>
 		
@@ -331,7 +333,8 @@
 				</div>
 				<div class="ar-cta">
 					<div class="termek-ar">13 390 Ft<br><span>2 232 Ft/doboz</span><br><span>7 439 Ft/kg</span></div>
-					<button class="kosar-gomb" onclick="addToCart(224, '6 db-os Yourméé csomag', 13390, 'termek6.png', 3000, [csomag2_1, csomag2_2, csomag2_3, csomag2_4, csomag2_5, csomag2_6])">Kosárba</button>
+					<button class="kosar-gomb" onclick="addToCart(224, '6 db-os Yourméé csomag', 13390, 'termek6.png', 3000, [document.getElementById('csomag2_1').value, document.getElementById('csomag2_2').value, document.getElementById('csomag2_3').value, document.getElementById('csomag2_4').value, document.getElementById('csomag2_5').value, document.getElementById('csomag2_6').value])">Kosárba</button>
+
 				</div>
 			</div>
 		
@@ -502,8 +505,10 @@
 				</div>
 				<div class="ar-cta">
 					<div class="termek-ar">23 990 Ft<br><span>1 999 Ft/doboz</span><br><span>6 664 Ft/kg</span></div>
-					<button class="kosar-gomb" onclick="addToCart(225, '12 db-os Yourméé csomag', 23990, 'termek12.png', 5500, [csomag3_1, csomag3_2, csomag3_3, csomag3_4, csomag3_5, csomag3_6, csomag3_7, csomag3_8, csomag3_9, csomag3_10, csomag3_11, csomag3_12])">Kosárba</button>
-					
+					<button class="kosar-gomb" onclick="addToCart(225, '12 db-os Yourméé csomag', 23990, 'termek12.png', 5500, [document.getElementById('csomag3_1').value, document.getElementById('csomag3_2').value,
+    document.getElementById('csomag3_3').value, document.getElementById('csomag3_4').value, document.getElementById('csomag3_5').value, document.getElementById('csomag3_6').value, document.getElementById('csomag3_7').value, document.getElementById('csomag3_8').value, document.getElementById('csomag3_9').value, document.getElementById('csomag3_10').value, document.getElementById('csomag3_11').value, document.getElementById('csomag3_12').value])">Kosárba</button>
+
+
 				</div>
 			</div>
 		</div>
@@ -571,16 +576,16 @@
 						<input type="text" name="shipping_address" id="shipping_address">
 					</div>
 
-                    <div class="radio-label">  
-						<label>
+                    <div class="radio-label">
+						<label onclick="updateTotalAmount()">
 							<input type="radio" name="radio-payment" value="1" id="selected" />
 							<span>Utánvét</span>
 						</label>
-						<label>
+						<label onclick="updateTotalAmount()">
 							<input type="radio" name="radio-payment" value="2" id="selected" />
 							<span>Banki átutalás</span>
 						</label>
-						<label>
+						<label onclick="updateTotalAmount()">
 							<input type="radio" name="radio-payment" value="3" id="selected" />
 							<span>Bankkártya</span>
 						</label>
@@ -590,12 +595,12 @@
 							<input type="radio" name="radio-shipping" value="MPL" id="shipping" />
 							<span>MPL</span><br><span class="szallitasi-koltseg">+1590 Ft</span>
 						</label>-->
-						<label>
-							<input id="gls" type="radio" name="radio-shipping" value="GLS" id="shipping" data-price="2199"/>
+						<label onclick="updateTotalAmount()">
+							<input id="gls" type="radio" name="radio-shipping" value="GLS" data-price="2199"/>
 							<span>GLS</span><br><span class="gls szallitasi-koltseg">+2199 Ft</span>
 						</label>
-						<label>
-							<input type="radio" name="radio-shipping" value="FOXPOST" id="shipping" data-price="1190"/>
+						<label onclick="updateTotalAmount()">
+							<input type="radio" name="radio-shipping" value="FOXPOST" data-price="1190"/>
 							<span>Foxpost</span><br><span class="szallitasi-koltseg">+1190 Ft</span>
 						</label>
                     </div>
@@ -666,13 +671,7 @@
 	var total = 0;
 
 	function addToCart(id, name, price, image, weight, products) {
-		let cartItem = cart.find(item => item.id === id);
-		if (cartItem) {
-			console.log('Létező termék');
-			cartItem.qty += 1;
-		} else {
-			cart.push({ id, name, price, qty: 1, image });
-		}
+		cart.push({ id, name, price, qty: 1, image, weight, products });
 		updateCartDisplay();
 		cartPopup();
 	}
@@ -696,12 +695,13 @@
                 </div>
                 <div class="kosar-termek-tartalom">
 					<p>Csomag tartalma:</p>
-					<span id="product"></span>
+					${item.products.map(product => `<span id="product">${product}</span>`).join(' ')}
 				</div>
                 <button class="x-button" type="button" onclick="removeFromCart(${index})"><i class="fa-solid fa-circle-xmark"></i></button>
             `;
 			cartItemsContainer.appendChild(newDiv);
 		});
+		shipping_price();
 		updateTotalAmount();
 	}
 
@@ -712,7 +712,6 @@
 				total_weight += item.weight * item.qty; // Összeadjuk az elemek súlyát
 			}
 		});
-		console.log(total_weight);
 		if(total_weight < 2000){
 			total_shipping_price = 2199;
 		} else if(total_weight < 4000){
@@ -728,7 +727,6 @@
 		} else {
 			total_shipping_price = 4999;
 		}
-		console.log(total_shipping_price);
 		document.querySelector('.gls').innerHTML = `+${total_shipping_price} Ft`;
 		document.getElementById('gls').dataset.price = total_shipping_price;
 		return total_shipping_price;
@@ -751,9 +749,10 @@
 
 	totalCount = 0;
 	function updateTotalAmount() {
-		const totalAmountElement = document.getElementById("totalAmount");
-		const shippingPrice = $('input[name="radio-shipping"]:checked').data('price') || 0;
-		const paymentPrice = $('input[name="radio-payment"]:checked').data('price') || 0;
+		let totalAmountElement = document.getElementById("totalAmount");
+		let shippingPrice = Number(document.querySelector('input[name="radio-shipping"]:checked')?.getAttribute('data-price')) || 0;
+		console.log(shippingPrice);
+		let paymentPrice = Number(document.querySelector('input[name="radio-payment"]:checked')?.getAttribute('data-price')) || 0;
 		total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 		total += shippingPrice + paymentPrice;
 		if(totalCount != total) {
@@ -768,7 +767,6 @@
 				}
 			}, 10)
 		}
-		console.log(total);
 	}
 
 
@@ -803,10 +801,12 @@
 
 		let product_ids = [];
 		let product_qtys = [];
+		let tetel = {};
 
-		cart.forEach((item) => {
+		cart.forEach((item, index) => {
 			product_ids.push(item.id);
 			product_qtys.push(item.qty);
+			tetel[`tetel${index + 1}`] = item.products.join(', ');
 		});
 
 		if (document.querySelector('input[name="radio-shipping"]:checked').value === 'GLS') {
@@ -864,12 +864,13 @@
 						data:
 								{
 									foxpost_automata: document.getElementById('foxpostData').value,
+									...tetel
 								},
 						//success_return_url: 'https://rachelcare.hu/koszonjuk.html'
 					};
 
 			try {
-				let response = await fetch('https://epikforge.space/api/site/14f99d48-6e43-463e-9d76-7008c7fda308/order/create', {
+				let response = await fetch('https://epikforge.space/api/site/d8eff91b-7059-40dd-80d7-e9867d4c5c77/order/create', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -900,11 +901,13 @@
 							document.getElementById('form').removeChild(document.getElementById('form').firstChild);
 						}
 						document.getElementById('form').innerHTML = `
-                            <h3>Sikeres rendelés!</h3>
+                            <h3 id="sikeres">Sikeres rendelés!</h3>
                             <button class="rendeles-gomb" type="button" onclick="location.reload();">Új rendelés leadása</button>
                         `;
 						document.getElementById('form').style.height = '500px';
 						document.getElementById('form').style.opacity = '1';
+
+						document.getElementById('sikeres').scrollIntoView({ behavior: 'smooth' });
 					}, 500)
 				}
 
@@ -915,245 +918,6 @@
 
 		sendData();
 	}
-</script>
-<script>/*
-    var app =
-        {
-            cart: [],
-            formSendable: true,
-            name: null,
-            email: null,
-            phone: null,
-            billing_zip: null,
-            billing_city: null,
-            billing_address: null,
-            shipping_zip: null,
-            shipping_city: null,
-            shipping_address: null,
-			shipping: null,
-            selected: null,
-			csomag1_1: "Szélesmetélt",
-			csomag1_2: "Szélesmetélt",
-			csomag1_3: "Szélesmetélt",
-			csomag2_1: "Szélesmetélt",
-			csomag2_2: "Szélesmetélt",
-			csomag2_3: "Szélesmetélt",
-			csomag2_4: "Szélesmetélt",
-			csomag2_5: "Szélesmetélt",
-			csomag2_6: "Szélesmetélt",
-			csomag3_1: "Szélesmetélt",
-			csomag3_2: "Szélesmetélt",
-			csomag3_3: "Szélesmetélt",
-			csomag3_4: "Szélesmetélt",
-			csomag3_5: "Szélesmetélt",
-			csomag3_6: "Szélesmetélt",
-			csomag3_7: "Szélesmetélt",
-			csomag3_8: "Szélesmetélt",
-			csomag3_9: "Szélesmetélt",
-			csomag3_10: "Szélesmetélt",
-			csomag3_11: "Szélesmetélt",
-			csomag3_12: "Szélesmetélt",
-            product1: 1,
-            product2: 1,
-            product3: 1,
-            product4: 1,
-            product5: 1,
-            product6: 1,
-			shipping_price() {
-				total_weight = 0; // Inicializáljuk a total_weight változót
-				this.cart.forEach(item => {
-					if (item.weight) {
-						total_weight += item.weight * item.qty; // Összeadjuk az elemek súlyát
-					}
-				});
-				console.log(total_weight);
-				if(total_weight < 2000){
-					total_shipping_price = 2199;
-				} else if(total_weight < 4000){
-					total_shipping_price = 2399;
-				} else if(total_weight < 5000){
-					total_shipping_price = 2499;
-				} else if(total_weight < 10000){
-					total_shipping_price = 2699;
-				} else if(total_weight < 20000){
-					total_shipping_price = 2999;
-				} else if(total_weight < 30000){
-					total_shipping_price = 3299;
-				} else {
-					total_shipping_price = 4999;
-				}
-				console.log(total_shipping_price);
-				document.querySelector('.gls').innerHTML = `+${total_shipping_price} Ft`;
-				document.getElementById('gls').dataset.price = total_shipping_price;
-				return total_shipping_price;
-			},
-            total() {
-                return this.cart.reduce((total, item) => total + item.price * item.qty, 0);
-            },
-			grandTotal() {
-				this.shipping_price();
-				if (this.total() > 0) {
-					const shippingPrice = parseFloat(document.querySelector('input[name="radio-shipping"]:checked')?.getAttribute('data-price')) || 0;
-					fb_total = this.total() + shippingPrice;
-					return this.total() + shippingPrice;
-				} else {
-					return this.total();
-				}
-			},
-            postData() {
-                // prevent sending the form if cart is empty
-                if (this.cart.length === 0) {
-                    alert('A kosár üres!');
-                    return;
-                }
-
-                let valid = true;
-                // trigger form validation on input fields
-                document.querySelectorAll('#theForm input').forEach((input) => {
-                    input.reportValidity();
-                    if(input.checkValidity() === false)
-                        valid = false;
-                });
-
-				if (!document.querySelector('input[name="radio-payment"]:checked')) {
-					alert('Kérlek válassz a fizetési módok közül!');
-					return;
-				}
-
-				if (!document.querySelector('input[name="radio-shipping"]:checked')) {
-					alert('Kérlek válassz a szállítási módok közül!');
-					return;
-				}
-
-				if (document.querySelector('input[name="radio-shipping"]:checked').value === 'FOXPOST' && document.getElementById('foxpostData').value === '') {
-					alert('Kérlek válassz ki egy automatát a listából!');
-					return;
-				}
-
-                if(!valid)
-                    return;
-
-                // prepare cart data
-                let product_ids = [];
-                let product_qtys = [];
-				let extraData = [];
-				let i = 0;
-
-                this.cart.forEach((item) => {
-                    product_ids.push(item.id);
-                    product_qtys.push(item.qty);
-					i++;
-					extraData["tetel"+i] = item.products;
-                });
-
-				if (document.querySelector('input[name="radio-shipping"]:checked').value === 'GLS') {
-					console.log('súly', total_weight);
-					if(total_weight < 2000){
-						product_ids.push(234);
-						product_qtys.push(1);
-					} else if(total_weight < 4000){
-						product_ids.push(264);
-						product_qtys.push(1);
-					} else if(total_weight < 5000){
-						product_ids.push(265);
-						product_qtys.push(1);
-					} else if(total_weight < 10000){
-						product_ids.push(266);
-						product_qtys.push(1);
-					} else if(total_weight < 20000){
-						product_ids.push(267);
-						product_qtys.push(1);
-					} else if(total_weight < 30000){
-						product_ids.push(268);
-						product_qtys.push(1);
-					} else {
-						product_ids.push(269);
-						product_qtys.push(1);
-					}
-
-				} else if (document.querySelector('input[name="radio-shipping"]:checked').value === 'FOXPOST') {
-					product_ids.push(263);
-					product_qtys.push(1);
-				}
-
-
-                if (this.formSendable) {
-                    this.formSendable = false;
-                    setTimeout(resetFormSendable, 5000);
-					
-					 // Convert extraData to a comma-separated string
-					let extraDataString = Object.entries(extraData)
-					.map(([key, value]) => `${key}=${value}`)
-					.join(', ');
-					
-                    let data = {
-                        name: this.name,
-                        email: this.email,
-                        phone: this.phone,
-                        billing_zip: this.billing_zip,
-                        billing_city: this.billing_city,
-                        billing_address: this.billing_address,
-                        shipping_zip: this.shipping_zip,
-                        shipping_city: this.shipping_city,
-                        shipping_address: this.shipping_address,
-                        payment_method_id: this.selected,
-						success_return_url: 'https://landing.epikforge.com/yourmee/koszonjuk.html',
-                        'product_id[]': product_ids,
-                        'product_qty[]': product_qtys,
-						'data[szallitas]': document.getElementById('foxpostData').value
-                    };
-					
-					// Add each extraData entry to the data object
-					Object.entries(extraData).forEach(([key, value]) => {
-						data[`data[${key}]`] = Array.isArray(value) ? value.join(', ') : value;
-					});
-
-                    $.ajax({
-                        type: "POST",
-                        url: "https://epikforge.space/api/site/d8eff91b-7059-40dd-80d7-e9867d4c5c77/order/create",
-                        data: data,
-                        success: function (data) {
-                            console.log(data);
-                            app.cart = [];
-                            app.name = null;
-                            app.email = null;
-                            app.phone = null;
-                            app.billing_zip = null;
-                            app.billing_city = null;
-                            app.billing_address = null;
-                            app.shipping_zip = null;
-                            app.shipping_city = null;
-                            app.shipping_address = null;
-                            app.selected = null;
-                            app.product1 = 1;
-                            app.product2 = 1;
-                            app.product3 = 1;
-                            app.product4 = 1;
-                            app.product5 = 1;
-                            app.product6 = 1;
-                            app.formSendable = true;
-                            if(data.error)
-                                alert(data.error);
-                            else {
-                                alert("Sikeres rendelés!");
-								fbq('track', 'Purchase', {
-									value: fb_total,
-									currency: 'HUF',
-								});
-								console.log(fb_total);
-                                if(data.redirect)
-                                    window.location = data.redirect;
-                            }
-                        },
-                        error: function (data) {
-                            console.log(data);
-                            app.formSendable = true;
-                            alert("Hiba történt a rendelés során!");
-                        }
-                    });
-                }
-            }
-        };*/
 </script>
 <script>
     function myFunction() {
@@ -1196,38 +960,29 @@
 	});
 </script>
 <script>
-    let formSendable = true;
+	//Oldal görgetés
+	$(document).ready(function () {
+		$('a').click(function (e) {
+			const targetId = $(this).attr('href'); // Lekérjük az 'href' attribútumból a cél ID-t
+			if (targetId.startsWith('#') && $(targetId).length) { // Ellenőrizzük, hogy egy ID-re mutat-e
+				e.preventDefault(); // Alapértelmezett anchor viselkedés megakadályozása
 
-    function resetFormSendable() {
-        formSendable = true;
-    }
-	/*
-        function formatNumber(n) {
-            return n.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1 ");
-        }
+				const offset = $(targetId).offset().top; // A cél ID távolsága az oldal tetejétől
+				$('html, body').animate({
+					scrollTop: offset // Görgetés a célpontra
+				}, 800); // Görgetés időtartama (800 ms)
+			}
+		});
+	});
 
-        $(".quantity").on("change", function() {
-            let total = 0;
-            $('.quantity').each(function (item) {
-                let quantity = $(this).val();
-                let price = $(this).parent().parent().find('.priceDisplay').data('price');
-                total += quantity * price;
-            })
-            let quantity = $(this).val();
-            let priceDisplay = $(this).parent().parent().find('.priceDisplay');
-            priceDisplay.text(quantity*priceDisplay.data('price'));
-            priceDisplay.text(formatNumber(priceDisplay.text()));
-
-            if(total > 199900000) {
-                $('#shipping').text('0');
-            } else {
-                total+= $('#shipping').data('price');
-                $('#shipping').text(formatNumber($('#shipping').data('price').toString()));
-            }
-            $('#total').text(formatNumber(total.toString()));
-        });*/
-
-    
+</script>
+<script>
+	function cartPopup() {
+		document.getElementById('succes-cart').classList.add('active');
+		setTimeout(function () {
+			document.getElementById('succes-cart').classList.remove('active');
+		}, 3000);
+	}
 </script>
 	
 	
