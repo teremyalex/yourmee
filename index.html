@@ -296,10 +296,10 @@
 						<input type="radio" name="radio-payment" value="2" id="selected" />
 						<span>Banki átutalás</span>
 					</label>
-					<!--<label onclick="updateTotalAmount()">
+					<label onclick="updateTotalAmount()">
 						<input type="radio" name="radio-payment" value="3" id="selected" />
 						<span>Bankkártya</span>
-					</label>-->
+					</label>
 				</div>
 				<div class="radio-label" id="shippingMethod">
 					<!--<label>
@@ -462,11 +462,13 @@
 	}
 
 	totalCount = 0;
+	fbPxlTotal = 0;
 	function updateTotalAmount() {
 		let totalAmountElement = document.getElementById("totalAmount");
 		let shippingPrice = Number(document.querySelector('input[name="radio-shipping"]:checked')?.getAttribute('data-price')) || 0;
 		let paymentPrice = Number(document.querySelector('input[name="radio-payment"]:checked')?.getAttribute('data-price')) || 0;
 		total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+		fbPxlTotal = total;
 		total += shippingPrice + paymentPrice;
 		if(totalCount != total) {
 			totalCount = 0;
@@ -611,7 +613,7 @@
 				console.log('Sikeres válasz:', data);
 
 				fbq('track', 'Purchase', {
-					value: total,
+					value: fbPxlTotal,
 					currency: 'HUF',
 				});
 
@@ -627,9 +629,19 @@
 						}
 						document.getElementById('form').innerHTML = `
                             <h3 id="sikeres">Sikeres rendelés!</h3>
+                            <div style="max-width: 700px; margin: 0 auto;">${adat.payment_method_id == "2" ? `
+								<p>Mivel fizetési módnak "Banki átutalást" választottál, ezért mielőtt útnak indítanánk a csomagod, az alábbi adatok segítségével tudod intézni az utalást:</p>
+								<p>Bankszámlaszám:<br>
+								Belföldi utalás esetén: 10404405-50526868-69481006<br>
+								Külföldi utalás esetén: IBAN szám:  HU03 1040 4405 5052 6868 6948 1006<br>
+								SWIFT code: OKHBHUHB<br>
+								Kedvezményezett: FürjPiac Kft.<br>
+								Közleménybe tüntesd fel az űrlap kitöltésekor megadott nevet: ${adat.name}</p>
+								<p>Ha az utalásod beérkezett, akkor nyomban összekészítjük, és útnak indítjuk a csomagod!</p>` : ''}
+                            </div>
                             <button class="rendeles-gomb" type="button" onclick="location.reload();">Új rendelés leadása</button>
                         `;
-						document.getElementById('form').style.height = '300px';
+						document.getElementById('form').style.minHeight = '300px';
 						document.getElementById('form').style.opacity = '1';
 
 						document.getElementById('sikeres').scrollIntoView({ behavior: 'smooth' });

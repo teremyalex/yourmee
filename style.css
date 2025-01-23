@@ -321,7 +321,11 @@ body{
 }
 .rendeles{
 	max-width: 1024px;
-	margin: 0 auto;
+	margin: 50px auto 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-evenly;
 }
 .rendeles h3, .rendeles p{
 	text-align: center;
@@ -476,14 +480,6 @@ input#myCheck {
 	font-weight: 400;
 	margin: 10px auto;
 	text-align: center;
-}
-.form > div{
-	max-width: 1024px;
-	margin: 50px auto 0;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-start;
-	justify-content: space-evenly;
 }
 .form > div > div,
 .form form{
